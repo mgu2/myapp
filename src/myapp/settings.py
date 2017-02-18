@@ -79,6 +79,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+SHARE_URL = "http://localhost:8000/?ref="
+
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
