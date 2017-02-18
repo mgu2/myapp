@@ -33,12 +33,19 @@ def get_ref_id():
 
     
     
-def share(request):
+def share(request, ref_id):
     context = {}
     template = "share.html"
     return render(request, template, context)
     
 def home(request):
+    try:
+        
+        join_id = request.session['join_id_ref']
+        obj = Join.objects.get(id = join_id)
+    except:
+        obj = None
+    
     form = JoinForm(request.POST or None)  
     if form.is_valid():
         new_join = form.save(commit=False)
@@ -46,8 +53,15 @@ def home(request):
         new_join_old, created = Join.objects.get_or_create(email=email)
         if created:
             new_join_old.ref_id = get_ref_id()
+            #add friend to Join model
+            
+            if not obj == None:
+                new_join_old.friend = obj
+            
             new_join_old.ip_address = get_ip(request)
             new_join_old.save()
+            
+            
         return HttpResponseRedirect("/%s" %(new_join_old.ref_id))
         #redirect
         
